@@ -459,6 +459,50 @@
     .rv.on { opacity: 1; transform: translateY(0); }
     .rv2 { transition-delay: 0.15s; }
     .rv3 { transition-delay: 0.3s; }
+
+    /* ══ MOBILE ══ */
+    @media (max-width: 600px) {
+      /* Nav */
+      .topnav {
+        padding: 14px 16px;
+        gap: 8px;
+      }
+      .topnav .band-name { font-size: 16px; }
+      .topnav nav { gap: 14px; }
+      .topnav nav a { font-size: 12px; }
+
+      /* Sections */
+      .sec-inner { padding: 80px 20px 40px; }
+
+      /* Кліп */
+      #klip { justify-content: center; }
+
+      /* Слухати — стаємо вертикально */
+      .listen-wrap {
+        flex-direction: column;
+        gap: 28px;
+        padding: 80px 20px 40px;
+        align-items: flex-start;
+      }
+      .album-art {
+        width: 100% !important;
+        height: 220px !important;
+        flex-shrink: unset;
+      }
+      .track-title { font-size: clamp(28px, 8vw, 42px); }
+
+      /* Фото секція — менша порожнеча */
+      #foto { padding-top: 70px; min-height: auto; }
+      .foto-cell { width: clamp(140px, 70vw, 260px); }
+      .slider-btn { width: 36px; height: 36px; }
+
+      /* Hero текст менший */
+      .hero-band { font-size: clamp(52px, 18vw, 90px); }
+
+      /* Footer */
+      footer { padding: 40px 20px; }
+      .ft-name { font-size: clamp(32px, 12vw, 60px); }
+    }
   </style>
 </head>
 <body>
@@ -558,7 +602,7 @@
         <div class="prog-bar" onclick="seekAudio(event,this)">
           <div class="prog-fill" id="progFill"></div>
         </div>
-        <span class="time-txt" id="timeTxt">0:00 / 2:55</span>
+        <span class="time-txt" id="timeTxt">0:00 / 3:34</span>
       </div>
       <div class="stream-row rv rv3">
         <a class="stream-a" href="#" target="_blank">SoundCloud</a>
@@ -781,13 +825,13 @@
   <div class="secret-box">
     <button class="secret-close" onclick="closeSecretBtn()">✕</button>
     <div class="secret-placeholder">
-      <img src="secret.jpg" alt="Таємне фото">
+      <!-- Replace with: <img src="secret.jpg" alt="Таємне фото"> -->
       <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
         <path d="M30 10 Q50 20 50 30 Q50 50 30 52 Q10 50 10 30 Q10 20 30 10Z" stroke="#f5f0dc" stroke-width="1" fill="none" opacity="0.3"/>
         <circle cx="30" cy="30" r="8" stroke="#f5f0dc" stroke-width="1.5" opacity="0.5"/>
         <path d="M30 5 L30 12M30 48 L30 55M5 30 L12 30M48 30 L55 30" stroke="#f5f0dc" stroke-width="1" opacity="0.3"/>
       </svg>
-      <div class="secret-label">Секретний-секрет</div>
+      <div class="secret-label">Тільки для своїх</div>
     </div>
     <div class="secret-caption">↑ ↑ ↓ ↓ ← → ← → B A</div>
   </div>
