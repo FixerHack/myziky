@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MooЗики</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f0dc;
+      --cream-dark: #ede8cf;
+      --ink: #1a1611;
+      --red: #c0392b;
+      --border: #c8c0a0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ══ FIXED NAV ══ */
+    .topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 60px;
+      background: rgba(245,240,220,0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topnav .band-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .topnav nav { display: flex; gap: 32px; }
+    .topnav nav a {
+      font-family: 'IM Fell English', serif;
+      font-size: 14px;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.6;
+      letter-spacing: 0.06em;
+      transition: opacity 0.2s;
+    }
+    .topnav nav a:hover { opacity: 1; }
+
+    /* ══ SECTIONS — full screen ══ */
+    section {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ══ HERO ══ */
+    #dim { background: var(--cream); padding-top: 70px; }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      /* Replace 'hero.jpg' with your photo path */
+      background: url('hero.jpg') center/cover no-repeat;
+      filter: grayscale(100%) contrast(1.08);
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(245,240,220,0.52);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .hero-band {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(60px, 12vw, 130px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      margin-bottom: 22px;
+    }
+    .hero-sub {
+      font-family: 'IM Fell English', serif;
+      font-size: clamp(13px, 1.8vw, 18px);
+      font-style: italic;
+      letter-spacing: 0.18em;
+      opacity: 0.6;
+    }
+
+    /* Red squares */
+    .rsq {
+      position: absolute;
+      background: var(--red);
+      z-index: 3;
+    }
+    .rsq-1 { width: 55px; height: 55px; top: 22%; left: 7%; }
+    .rsq-2 { width: 35px; height: 35px; top: 60%; left: 82%; }
+    .rsq-3 { width: 45px; height: 45px; top: 72%; left: 14%; }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0.4;
+      animation: bob 2s infinite;
+      z-index: 4;
+    }
+    .scroll-hint span { font-family: 'IM Fell English', serif; font-size: 11px; letter-spacing: 0.14em; }
+    @keyframes bob {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ══ SWIRLS ══ */
+    .swirl { position: absolute; pointer-events: none; opacity: 0.38; }
+
+    /* ══ КЛІП ══ */
+    #klip { background: var(--cream-dark); }
+
+    .sec-inner {
+      width: 100%;
+      max-width: 960px;
+      padding: 100px 60px 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .sec-label {
+      font-family: 'IM Fell English', serif;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      opacity: 0.4;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 6vw, 76px);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1;
+      margin-bottom: 36px;
+    }
+
+    .video-wrap {
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #c8c0a0;
+    }
+    .video-wrap iframe { width: 100%; height: 100%; border: none; }
+    .vid-ph {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(145deg, #cec7ad, #b2ab92);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .vid-ph:hover { opacity: 0.85; }
+    .play-ring {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      transition: background 0.2s;
+    }
+    .vid-ph:hover .play-ring { background: var(--ink); }
+    .vid-ph:hover .play-ring path { fill: var(--cream); }
+    .vid-label { font-family: 'IM Fell English', serif; font-size: 14px; letter-spacing: 0.1em; opacity: 0.65; }
+
+    /* ══ СЛУХАТИ ══ */
+    #muzyka { background: var(--cream); }
+
+    .listen-wrap {
+      display: flex;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+      max-width: 960px;
+      padding: 100px 60px 60px;
+    }
+    .album-art {
+      flex-shrink: 0;
+      width: clamp(160px, 24vw, 300px);
+      height: clamp(160px, 24vw, 300px);
+      background: linear-gradient(145deg, #9c9590, #787270);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .album-art img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(70%); }
+
+    .listen-info { flex: 1; }
+    .track-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 4.5vw, 58px);
+      font-weight: 700; line-height: 1;
+      margin-bottom: 8px;
+    }
+    .track-sub {
+      font-family: 'IM Fell English', serif;
+      font-size: 15px; font-style: italic;
+      opacity: 0.5; margin-bottom: 30px;
+    }
+
+    .player-row {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 8px;
+    }
+    .btn-play {
+      background: none;
+      border: 1.5px solid var(--ink);
+      border-radius: 50%;
+      width: 46px; height: 46px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .btn-play:hover { background: var(--ink); }
+    .btn-play:hover svg path, .btn-play:hover svg rect { fill: var(--cream); }
+
+    .prog-bar {
+      flex: 1; height: 3px;
+      background: var(--border);
+      border-radius: 2px; cursor: pointer;
+    }
+    .prog-fill {
+      height: 100%; background: var(--ink);
+      border-radius: 2px; width: 0%;
+      transition: width 0.1s linear;
+    }
+    .time-txt { font-size: 11px; opacity: 0.4; letter-spacing: 0.06em; flex-shrink: 0; }
+
+    .stream-row {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px;
+    }
+    .stream-a {
+      font-family: 'IM Fell English', serif;
+      font-size: 12px; letter-spacing: 0.08em;
+      text-decoration: none; color: var(--ink);
+      border: 1px solid var(--ink);
+      padding: 8px 22px; opacity: 0.65;
+      transition: all 0.2s;
+    }
+    .stream-a:hover { background: var(--ink); color: var(--cream); opacity: 1; }
+
+    /* ══ ФОТО ══ */
+    #foto { background: var(--cream-dark); justify-content: flex-start; padding-top: 70px; }
+
+    .slider-wrap { position: relative; width: 100%; }
+
+    .foto-slider {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+    }
+    .foto-slider:active { cursor: grabbing; }
+    .foto-slider::-webkit-scrollbar { display: none; }
+
+    .foto-cell {
+      flex-shrink: 0;
+      width: clamp(200px, 28vw, 320px);
+      aspect-ratio: 1;
+      background: linear-gradient(145deg, #b8b2a0, #8a8480);
+      overflow: hidden;
+    }
+    .foto-cell:nth-child(2n) { background: linear-gradient(145deg, #9c9890, #787470); }
+    .foto-cell:nth-child(3n) { background: linear-gradient(145deg, #c0bbb0, #959087); }
+    .foto-cell:nth-child(4n) { background: linear-gradient(145deg, #787068, #5c5855); }
+    .foto-cell img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(55%); transition: filter 0.4s, transform 0.4s;
+      pointer-events: none;
+    }
+    .foto-cell:hover img { filter: grayscale(0%); transform: scale(1.05); }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(245,240,220,0.92);
+      border: 1px solid var(--border);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .slider-btn:hover { background: var(--ink); }
+    .slider-btn:hover svg path { stroke: var(--cream); }
+    .slider-btn.prev { left: 12px; }
+    .slider-btn.next { right: 12px; }
+
+    /* album art clickable */
+    .album-art { cursor: pointer; position: relative; }
+    .album-art::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(26,22,17,0);
+      transition: background 0.2s;
+    }
+    .album-art:hover::after { background: rgba(26,22,17,0.15); }
+
+    /* fullscreen btn */
+    .video-wrap { position: relative; }
+    .video-fs-btn {
+      position: absolute;
+      bottom: 12px; right: 12px;
+      z-index: 10;
+      background: rgba(245,240,220,0.88);
+      border: 1px solid var(--border);
+      width: 36px; height: 36px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .video-fs-btn:hover { background: var(--ink); }
+    .video-fs-btn:hover svg rect { fill: var(--cream); }
+
+
+    /* ══ SECRET MODAL ══ */
+    .secret-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(26,22,17,0.92);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(6px);
+    }
+    .secret-overlay.open { opacity: 1; pointer-events: all; }
+
+    .secret-box {
+      position: relative;
+      max-width: 480px; width: 90%;
+      transform: scale(0.85);
+      transition: transform 0.4s ease;
+    }
+    .secret-overlay.open .secret-box { transform: scale(1); }
+
+    .secret-box img {
+      width: 100%;
+      display: block;
+      filter: sepia(30%) contrast(1.1);
+      border: 2px solid var(--border);
+    }
+    .secret-placeholder {
+      width: 100%; aspect-ratio: 3/4;
+      background: linear-gradient(145deg, #4a3f2a, #2a2018);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px;
+    }
+    .secret-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-style: italic;
+      color: var(--cream); opacity: 0.7;
+      letter-spacing: 0.1em; text-align: center; padding: 0 24px;
+    }
+    .secret-close {
+      position: absolute;
+      top: -18px; right: -18px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: var(--ink);
+      transition: background 0.2s;
+    }
+    .secret-close:hover { background: var(--red); color: var(--cream); }
+
+    .secret-caption {
+      font-family: 'IM Fell English', serif;
+      font-size: 12px; font-style: italic;
+      color: var(--cream); opacity: 0.4;
+      text-align: center; margin-top: 12px;
+      letter-spacing: 0.1em;
+    }
+
+    /* konami hint */
+    .konami-hint {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      background: rgba(26,22,17,0.8);
+      color: var(--cream);
+      font-family: 'IM Fell English', serif;
+      font-size: 11px; letter-spacing: 0.12em;
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      opacity: 0;
+      transition: opacity 0.5s, transform 0.5s;
+      pointer-events: none;
+      z-index: 998;
+      white-space: nowrap;
+    }
+    .konami-hint.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ══ FOOTER ══ */
+    footer {
+      min-height: 50vh;
+      background: var(--ink); color: var(--cream);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 22px; padding: 60px 48px;
+      position: relative; overflow: hidden;
+    }
+    .ft-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 8vw, 96px);
+      font-weight: 700; letter-spacing: 0.06em;
+    }
+    .ft-tag { font-family: 'IM Fell English', serif; font-size: 15px; font-style: italic; opacity: 0.45; letter-spacing: 0.15em; }
+    .ft-links { display: flex; gap: 30px; }
+    .ft-links a {
+      font-family: 'IM Fell English', serif; font-size: 13px;
+      color: var(--cream); text-decoration: none;
+      letter-spacing: 0.1em; opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .ft-links a:hover { opacity: 1; }
+    .ft-copy { font-size: 11px; opacity: 0.2; letter-spacing: 0.05em; }
+
+    .ft-swirl {
+      position: absolute; right: -80px; bottom: -80px;
+      width: 360px; height: 360px; opacity: 0.05;
+    }
+
+    /* ══ REVEAL ══ */
+    .rv { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .rv.on { opacity: 1; transform: translateY(0); }
+    .rv2 { transition-delay: 0.15s; }
+    .rv3 { transition-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="topnav">
+  <div class="band-name">MooЗики</div>
+  <nav>
+    <a href="#dim">Дім</a>
+    <a href="#klip">Кліп</a>
+    <a href="#muzyka">Музика</a>
+    <a href="#foto">Фото</a>
+  </nav>
+</div>
+
+<!-- ════ HERO ════ -->
+<section id="dim">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="rsq rsq-1"></div>
+  <div class="rsq rsq-2"></div>
+  <div class="rsq rsq-3"></div>
+
+  <svg class="swirl" style="top:70px;left:36px;width:110px;height:110px;" viewBox="0 0 110 110" fill="none">
+    <path d="M90,22 Q108,55 86,84 Q64,113 30,98 Q-4,83 6,48 Q16,13 52,14 Q88,15 82,52 Q76,89 42,88 Q8,87 10,55" stroke="#4a3f2a" stroke-width="1.5" fill="none"/>
+  </svg>
+  <svg class="swirl" style="top:70px;right:36px;width:90px;height:90px;" viewBox="0 0 90 90" fill="none">
+    <path d="M15,15 Q0,40 18,62 Q36,84 62,70 Q88,56 76,30 Q64,4 38,12 Q12,20 22,46 Q32,72 58,66" stroke="#4a3f2a" stroke-width="1.3" fill="none"/>
+  </svg>
+  <svg class="swirl" style="bottom:90px;right:70px;width:100px;height:100px;" viewBox="0 0 100 100" fill="none">
+    <path d="M82,20 Q98,50 78,76 Q58,102 28,88 Q-2,74 6,44 Q14,14 46,12 Q78,10 80,42 Q82,74 54,80 Q26,86 14,62" stroke="#4a3f2a" stroke-width="1.3" fill="none"/>
+    <circle cx="54" cy="80" r="3" fill="#4a3f2a" opacity="0.45"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-band rv">Moo<br>Зики</div>
+    <div class="hero-sub rv rv2">MooЗики</div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>гортати</span>
+    <svg width="14" height="22" viewBox="0 0 14 22" fill="none">
+      <line x1="7" y1="0" x2="7" y2="18" stroke="#1a1611" stroke-width="1.4"/>
+      <path d="M1 12l6 8 6-8" stroke="#1a1611" stroke-width="1.4" fill="none"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ════ КЛІП ════ -->
+<section id="klip">
+  <div class="sec-inner">
+    <div class="sec-label rv">відео</div>
+    <div class="sec-title rv rv2">Кліп</div>
+    <div class="video-wrap rv rv3">
+      <div class="vid-ph" id="vidPh" onclick="loadVideo()">
+        <div class="play-ring">
+          <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
+            <path d="M1 1L21 13L1 25V1Z" fill="#1a1611"/>
+          </svg>
+        </div>
+        <span class="vid-label">Дивитись кліп</span>
+      </div>
+      <button class="video-fs-btn" id="fsBtnWrap" onclick="goFullscreen()" title="На весь екран">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M1 5V1h4M11 1h4v4M15 11v4h-4M5 15H1v-4" stroke="#1a1611" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <svg class="swirl" style="bottom:50px;right:60px;width:130px;height:130px;" viewBox="0 0 130 130" fill="none">
+    <path d="M108,28 Q128,65 104,98 Q80,131 42,116 Q4,101 8,60 Q12,19 52,14 Q92,9 102,48 Q112,87 76,100 Q40,113 18,82" stroke="#4a3f2a" stroke-width="1.6" fill="none"/>
+  </svg>
+</section>
+
+<!-- ════ СЛУХАТИ ════ -->
+<section id="muzyka">
+  <div class="listen-wrap">
+    <!-- Клік на обкладинку → SoundCloud. Заміни href на своє посилання -->
+    <a href="#" target="_blank" class="album-art rv" title="Слухати на SoundCloud" style="text-decoration:none;">
+      <!-- <img src="album.jpg" alt="Обкладинка"> -->
+      <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
+        <circle cx="35" cy="35" r="32" stroke="#f5f0dc" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="35" cy="35" r="9" fill="#f5f0dc" opacity="0.25"/>
+      </svg>
+    </a>
+    <div class="listen-info">
+      <div class="sec-label rv">слухати</div>
+      <div class="track-title rv rv2">Подивись</div>
+      <div class="track-sub rv rv2">MooЗики · 2026</div>
+      <div class="player-row rv rv3">
+        <button class="btn-play" onclick="togglePlay(this)">
+          <svg id="playIcon" width="14" height="16" viewBox="0 0 14 16" fill="none">
+            <path d="M1 1L13 8L1 15V1Z" fill="#1a1611"/>
+          </svg>
+        </button>
+        <div class="prog-bar" onclick="seekAudio(event,this)">
+          <div class="prog-fill" id="progFill"></div>
+        </div>
+        <span class="time-txt" id="timeTxt">0:00 / 2:55</span>
+      </div>
+      <div class="stream-row rv rv3">
+        <a class="stream-a" href="#" target="_blank">SoundCloud</a>
+      </div>
+    </div>
+  </div>
+  <svg class="swirl" style="top:70px;left:40px;width:90px;height:110px;" viewBox="0 0 90 110" fill="none">
+    <path d="M45,105 Q45,70 45,10" stroke="#4a3f2a" stroke-width="1.2" fill="none"/>
+    <ellipse cx="28" cy="62" rx="17" ry="11" transform="rotate(-28 28 62)" fill="none" stroke="#4a3f2a" stroke-width="1"/>
+    <ellipse cx="62" cy="46" rx="17" ry="11" transform="rotate(28 62 46)" fill="none" stroke="#4a3f2a" stroke-width="1"/>
+    <ellipse cx="26" cy="28" rx="15" ry="9" transform="rotate(-50 26 28)" fill="none" stroke="#4a3f2a" stroke-width="0.9"/>
+  </svg>
+</section>
+
+<!-- ════ СПІЛЬНІ ФОТО ════ -->
+<section id="foto" style="justify-content:flex-start; padding-top:70px;">
+  <div class="sec-inner">
+    <div class="sec-label rv">галерея</div>
+    <div class="sec-title rv rv2">Спільні фото</div>
+  </div>
+  <div class="slider-wrap rv rv3">
+    <button class="slider-btn prev" onclick="slideLeft()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M11 4L6 9l5 5" stroke="#1a1611" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="foto-slider" id="fotoSlider">
+      <div class="foto-cell"><img src="photo/6.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/18.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/7.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/9.JPG" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/10.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/29.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/5.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/3.JPG" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/4.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/12.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/26.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/28.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/13.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/16.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/1.JPG" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/8.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/30.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/2.JPG" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/22.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/25.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/23.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/21.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/14.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/11.jpg" alt="фото"></div>
+      <div class="foto-cell"><img src="photo/20.jpg" alt="фото"></div>
+    </div>
+    <button class="slider-btn next" onclick="slideRight()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M7 4l5 5-5 5" stroke="#1a1611" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+  <svg class="swirl" style="bottom:60px;left:40px;width:100px;height:100px;" viewBox="0 0 100 100" fill="none">
+    <path d="M18,80 Q4,52 16,28 Q28,4 56,8 Q84,12 90,40 Q96,68 74,82 Q52,96 30,80 Q8,64 18,42 Q28,20 52,24" stroke="#4a3f2a" stroke-width="1.3" fill="none"/>
+  </svg>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="ft-name rv">MooЗики</div>
+  <div class="ft-tag rv">музика · душа · спогади</div>
+  <div class="ft-links rv rv2">
+    <a href="#" target="_blank">YouTube</a>
+  </div>
+  <div class="ft-copy rv rv3">© 2026 MooЗики. Всі права захищені.</div>
+  <svg class="ft-swirl" viewBox="0 0 360 360" fill="none">
+    <path d="M300,60 Q355,155 288,250 Q221,345 112,318 Q3,291 18,178 Q33,65 148,48 Q263,31 278,130 Q293,229 196,264 Q99,299 36,220" stroke="#f5f0dc" stroke-width="3.5" fill="none"/>
+  </svg>
+</footer>
+
+<script>
+  /* YouTube */
+  const VID = 'dQw4w9WgXcQ'; // ← ЗАМІНИ на свій YouTube ID
+  function loadVideo() {
+    const ph = document.getElementById('vidPh');
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube.com/embed/${VID}?autoplay=1`;
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    f.allowFullscreen = true;
+    ph.parentNode.replaceChild(f, ph);
+  }
+
+  /* Player */
+  let playing = false, prog = 0, tick = null;
+  const TOTAL = 214;
+  const audio = new Audio('podivis.mp3');
+  const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+
+  function togglePlay(btn) {
+    playing = !playing;
+    const ic = document.getElementById('playIcon');
+    if (playing) {
+      audio.play();
+      ic.innerHTML = '<rect x="1" y="1" width="4" height="14" fill="#1a1611"/><rect x="9" y="1" width="4" height="14" fill="#1a1611"/>';
+    } else {
+      audio.pause();
+      ic.innerHTML = '<path d="M1 1L13 8L1 15V1Z" fill="#1a1611"/>';
+    }
+    audio.ontimeupdate = () => {
+      prog = (audio.currentTime / audio.duration) * 100;
+      document.getElementById('progFill').style.width = prog + '%';
+      document.getElementById('timeTxt').textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+    };
+  }
+
+  function seekAudio(e, bar) {
+    const r = bar.getBoundingClientRect();
+    prog = Math.max(0, Math.min(((e.clientX - r.left) / r.width) * 100, 100));
+    audio.currentTime = (prog / 100) * audio.duration;
+    document.getElementById('progFill').style.width = prog + '%';
+  }
+
+  /* ── INFINITE SLIDER ── */
+  (function() {
+    const track = document.getElementById('fotoSlider');
+
+    // Clone all cells and append to create infinite loop illusion
+    const origCells = Array.from(track.children);
+    origCells.forEach(c => track.appendChild(c.cloneNode(true)));
+    origCells.forEach(c => track.insertBefore(c.cloneNode(true), track.firstChild));
+
+    const cellW = () => track.querySelector('.foto-cell').offsetWidth + 6;
+
+    // Start in the middle clone set
+    const jumpToMiddle = () => {
+      track.style.scrollBehavior = 'auto';
+      track.scrollLeft = cellW() * origCells.length;
+      track.style.scrollBehavior = 'smooth';
+    };
+    jumpToMiddle();
+    window.addEventListener('resize', jumpToMiddle);
+
+    // Seamless loop: when near edges, silently jump to middle
+    track.addEventListener('scroll', () => {
+      const total = cellW() * origCells.length;
+      if (track.scrollLeft <= cellW() * 2) {
+        track.style.scrollBehavior = 'auto';
+        track.scrollLeft += total;
+        track.style.scrollBehavior = 'smooth';
+      } else if (track.scrollLeft >= total * 2 - cellW() * 2) {
+        track.style.scrollBehavior = 'auto';
+        track.scrollLeft -= total;
+        track.style.scrollBehavior = 'smooth';
+      }
+    });
+
+    function slideLeft()  { track.scrollBy({ left: -(cellW() * 2), behavior: 'smooth' }); }
+    function slideRight() { track.scrollBy({ left:  (cellW() * 2), behavior: 'smooth' }); }
+    window.slideLeft  = slideLeft;
+    window.slideRight = slideRight;
+
+    // Drag to scroll
+    let isDown = false, startX, sl;
+    track.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - track.offsetLeft; sl = track.scrollLeft; track.style.scrollBehavior = 'auto'; });
+    track.addEventListener('mouseleave', () => { isDown = false; track.style.scrollBehavior = 'smooth'; });
+    track.addEventListener('mouseup',   () => { isDown = false; track.style.scrollBehavior = 'smooth'; });
+    track.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); track.scrollLeft = sl - (e.pageX - track.offsetLeft - startX); });
+
+    // Touch support
+    let tx = 0;
+    track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; track.style.scrollBehavior = 'auto'; }, { passive: true });
+    track.addEventListener('touchmove',  e => { track.scrollLeft -= e.touches[0].clientX - tx; tx = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend',   () => { track.style.scrollBehavior = 'smooth'; });
+  })();
+
+  /* Fullscreen */
+  function goFullscreen() {
+    const wrap = document.querySelector('.video-wrap');
+    if (wrap.requestFullscreen) wrap.requestFullscreen();
+    else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+  }
+
+
+  /* SECRET — Konami Code */
+  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let konamiIdx = 0;
+  let hintShown = false;
+
+  document.addEventListener('keydown', e => {
+    if (e.key === KONAMI[konamiIdx]) {
+      konamiIdx++;
+      // Show hint after first 2 correct keys
+      if (konamiIdx === 2 && !hintShown) {
+        hintShown = true;
+        const hint = document.getElementById('konamiHint');
+        hint.classList.add('show');
+        setTimeout(() => hint.classList.remove('show'), 2500);
+      }
+      if (konamiIdx === KONAMI.length) {
+        konamiIdx = 0;
+        document.getElementById('secretOverlay').classList.add('open');
+      }
+    } else {
+      konamiIdx = e.key === KONAMI[0] ? 1 : 0;
+    }
+  });
+
+  function closeSecret(e) {
+    if (e.target === document.getElementById('secretOverlay'))
+      document.getElementById('secretOverlay').classList.remove('open');
+  }
+  function closeSecretBtn() {
+    document.getElementById('secretOverlay').classList.remove('open');
+  }
+
+  /* Scroll reveal */
+  const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); } }), { threshold: 0.1 });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+
+<!-- SECRET MODAL -->
+<div class="secret-overlay" id="secretOverlay" onclick="closeSecret(event)">
+  <div class="secret-box">
+    <button class="secret-close" onclick="closeSecretBtn()">✕</button>
+    <div class="secret-placeholder">
+      <img src="secret.jpg" alt="Таємне фото">
+      <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+        <path d="M30 10 Q50 20 50 30 Q50 50 30 52 Q10 50 10 30 Q10 20 30 10Z" stroke="#f5f0dc" stroke-width="1" fill="none" opacity="0.3"/>
+        <circle cx="30" cy="30" r="8" stroke="#f5f0dc" stroke-width="1.5" opacity="0.5"/>
+        <path d="M30 5 L30 12M30 48 L30 55M5 30 L12 30M48 30 L55 30" stroke="#f5f0dc" stroke-width="1" opacity="0.3"/>
+      </svg>
+      <div class="secret-label">Секретний-секрет</div>
+    </div>
+    <div class="secret-caption">↑ ↑ ↓ ↓ ← → ← → B A</div>
+  </div>
+</div>
+
+<div class="konami-hint" id="konamiHint">введи код... ↑ ↑ ↓ ↓ ← → ← → B A</div>
+
+</body>
+</html>
