@@ -666,7 +666,7 @@
 <section id="muzyka">
   <div class="listen-wrap">
     <!-- Клік на обкладинку → SoundCloud. Заміни href на своє посилання -->
-    <a href="https://on.soundcloud.com/yx6sB5zRYM6qAUxfqi" target="_blank" class="album-art rv" title="Слухати на SoundCloud" style="text-decoration:none;">
+    <a href="#" target="_blank" class="album-art rv" title="Слухати на SoundCloud" style="text-decoration:none;">
       <!-- <img src="album.jpg" alt="Обкладинка"> -->
       <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
         <circle cx="35" cy="35" r="32" stroke="#f5f0dc" stroke-width="1.5" opacity="0.4"/>
@@ -686,10 +686,10 @@
         <div class="prog-bar" onclick="seekAudio(event,this)">
           <div class="prog-fill" id="progFill"></div>
         </div>
-        <span class="time-txt" id="timeTxt">0:00 / 1:58</span>
+        <span class="time-txt" id="timeTxt">0:00 / 3:34</span>
       </div>
       <div class="stream-row rv rv3">
-        <a class="stream-a" href="https://on.soundcloud.com/yx6sB5zRYM6qAUxfqi" target="_blank">SoundCloud</a>
+        <a class="stream-a" href="#" target="_blank">SoundCloud</a>
       </div>
     </div>
   </div>
@@ -722,46 +722,49 @@
         font-family="IM Fell English, serif" font-size="10"
         fill="#1a1611" opacity="0.14" letter-spacing="4">ПОДІЛЛЯ</text>
 
+      <!-- Route overlay -->
+      <image href="route.png" x="88" y="194" width="430" height="160" opacity="0.82" preserveAspectRatio="none"/>
+
       <!-- Штаб квартира (ІФ) -->
       <g class="map-pin" onclick="openMapModal('shtab')" data-loc="shtab">
-        <circle class="ring" cx="106.4" cy="254.2" r="5"/>
-        <circle class="dot"  cx="106.4" cy="254.2" r="4"/>
-        <text x="152" y="250" dominant-baseline="middle" font-size="7">Штаб (ІФ)</text>
+        <circle class="ring" cx="105.3" cy="248.2" r="5"/>
+        <circle class="dot"  cx="105.3" cy="248.2" r="4"/>
+        <text x="112" y="290" dominant-baseline="middle" font-size="7">Штаб (ІФ)</text>
       </g>
 
       <!-- Джуринський водоспад -->
       <g class="map-pin" onclick="openMapModal('vodospad')" data-loc="vodospad">
-        <circle class="ring" cx="218.6" cy="240.8" r="5"/>
-        <circle class="dot"  cx="218.6" cy="240.8" r="4"/>
-        <text x="188" y="237" dominant-baseline="middle" font-size="7">Джурин вдп.</text>
+        <circle class="ring" cx="254.2" cy="273.0" r="5"/>
+        <circle class="dot"  cx="254.2" cy="273.0" r="4"/>
+        <text x="238" y="285" dominant-baseline="middle" font-size="7">Джурин вдп.</text>
       </g>
 
       <!-- Атлантида -->
       <g class="map-pin" onclick="openMapModal('atlantyda')" data-loc="atlantyda">
-        <circle class="ring" cx="289.6" cy="300.0" r="5"/>
-        <circle class="dot"  cx="289.6" cy="300.0" r="4"/>
-        <text x="248" y="310" dominant-baseline="middle" font-size="7">Атлантида</text>
+        <circle class="ring" cx="376.5" cy="329.7" r="5"/>
+        <circle class="dot"  cx="376.5" cy="329.7" r="4"/>
+        <text x="310" y="325" dominant-baseline="middle" font-size="7">Атлантида</text>
       </g>
 
       <!-- Кам'янець-Подільський -->
       <g class="map-pin" onclick="openMapModal('kamianets')" data-loc="kamianets">
-        <circle class="ring" cx="330.1" cy="279.8" r="5"/>
-        <circle class="dot"  cx="330.1" cy="279.8" r="4"/>
-        <text x="336" y="276" dominant-baseline="middle" font-size="7">Камʼянець</text>
+        <circle class="ring" cx="420.8" cy="300.4" r="5"/>
+        <circle class="dot"  cx="420.8" cy="300.4" r="4"/>
+        <text x="380" y="306" dominant-baseline="middle" font-size="7">Камʼянець</text>
       </g>
 
       <!-- Маліївці -->
       <g class="map-pin" onclick="openMapModal('maliivtci')" data-loc="maliivtci">
-        <circle class="ring" cx="391.2" cy="236.5" r="5"/>
-        <circle class="dot"  cx="391.2" cy="236.5" r="4"/>
-        <text x="397" y="232" dominant-baseline="middle" font-size="7">Маліївці</text>
+        <circle class="ring" cx="482.8" cy="220.7" r="5"/>
+        <circle class="dot"  cx="482.8" cy="220.7" r="4"/>
+        <text x="511" y="220" dominant-baseline="middle" font-size="7">Маліївці</text>
       </g>
 
       <!-- Бакота -->
       <g class="map-pin" onclick="openMapModal('bakota')" data-loc="bakota">
-        <circle class="ring" cx="381.9" cy="294.5" r="5"/>
-        <circle class="dot"  cx="381.9" cy="294.5" r="4"/>
-        <text x="387" y="291" dominant-baseline="middle" font-size="7">Бакота</text>
+        <circle class="ring" cx="496.1" cy="327.9" r="5"/>
+        <circle class="dot"  cx="496.1" cy="327.9" r="4"/>
+        <text x="445" y="333" dominant-baseline="middle" font-size="7">Бакота</text>
       </g>
 
     </svg>
@@ -883,7 +886,7 @@
       ]
     },
     shtab: {
-      title: 'Штаб квартира',
+      title: 'Штаб-квартира',
       photos: [
         'photo/shtab-kvartira/1.JPG','photo/shtab-kvartira/2.JPG','photo/shtab-kvartira/3.JPG'
       ]
@@ -980,7 +983,7 @@
   <div class="secret-box">
     <button class="secret-close" onclick="closeSecretBtn()">✕</button>
     <div class="secret-placeholder">
-      <img src="secret.jpg" alt="Таємне фото">
+      <!-- Replace with: <img src="secret.jpg" alt="Таємне фото"> -->
       <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
         <path d="M30 10 Q50 20 50 30 Q50 50 30 52 Q10 50 10 30 Q10 20 30 10Z" stroke="#f5f0dc" stroke-width="1" fill="none" opacity="0.3"/>
         <circle cx="30" cy="30" r="8" stroke="#f5f0dc" stroke-width="1.5" opacity="0.5"/>
