@@ -16,6 +16,7 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; }
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--cream);
@@ -49,11 +50,23 @@
       font-size: 14px;
       color: var(--ink);
       text-decoration: none;
-      opacity: 0.6;
+      opacity: 0.4;
       letter-spacing: 0.06em;
-      transition: opacity 0.2s;
+      transition: opacity 0.4s ease;
+      position: relative;
+      padding-bottom: 3px;
     }
-    .topnav nav a:hover { opacity: 1; }
+    .topnav nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--ink);
+      transition: width 0.4s ease;
+    }
+    .topnav nav a:hover { opacity: 0.85; }
+    .topnav nav a.nav-active { opacity: 1; }
+    .topnav nav a.nav-active::after { width: 100%; }
 
     /* ══ SECTIONS — full screen ══ */
     section {
@@ -191,77 +204,141 @@
     /* ══ СЛУХАТИ ══ */
     #muzyka { background: var(--cream); }
 
-    .listen-wrap {
-      display: flex;
-      gap: 64px;
-      align-items: center;
+    .ap-wrap {
       width: 100%;
-      max-width: 960px;
-      padding: 100px 60px 60px;
+      max-width: 860px;
+      padding: 80px 60px 60px;
     }
-    .album-art {
-      flex-shrink: 0;
-      width: clamp(160px, 24vw, 300px);
-      height: clamp(160px, 24vw, 300px);
-      background: linear-gradient(145deg, #9c9590, #787270);
-      display: flex; align-items: center; justify-content: center;
+
+    .album-player {
+      border: 1px solid var(--border);
       overflow: hidden;
     }
-    .album-art img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(70%); }
 
-    .listen-info { flex: 1; }
-    .track-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(30px, 4.5vw, 58px);
-      font-weight: 700; line-height: 1;
-      margin-bottom: 8px;
-    }
-    .track-sub {
-      font-family: 'IM Fell English', serif;
-      font-size: 15px; font-style: italic;
-      opacity: 0.5; margin-bottom: 30px;
-    }
+    .ap-top { display: flex; }
 
-    .player-row {
-      display: flex; align-items: center; gap: 16px; margin-bottom: 8px;
-    }
-    .btn-play {
-      background: none;
-      border: 1.5px solid var(--ink);
-      border-radius: 50%;
-      width: 46px; height: 46px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+    .ap-cover {
+      width: 160px; height: 160px;
       flex-shrink: 0;
-      transition: all 0.2s;
+      background: linear-gradient(145deg, #9c9590, #787270);
+      overflow: hidden;
     }
-    .btn-play:hover { background: var(--ink); }
-    .btn-play:hover svg path, .btn-play:hover svg rect { fill: var(--cream); }
+    .ap-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .prog-bar {
-      flex: 1; height: 3px;
-      background: var(--border);
-      border-radius: 2px; cursor: pointer;
+    .ap-main {
+      flex: 1;
+      padding: 14px 18px 12px;
+      display: flex; flex-direction: column; gap: 10px;
+      border-left: 1px solid var(--border);
+      min-width: 0;
     }
-    .prog-fill {
-      height: 100%; background: var(--ink);
-      border-radius: 2px; width: 0%;
-      transition: width 0.1s linear;
-    }
-    .time-txt { font-size: 11px; opacity: 0.4; letter-spacing: 0.06em; flex-shrink: 0; }
 
-    .stream-row {
-      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px;
+    .ap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
     }
-    .stream-a {
+
+    .ap-band {
       font-family: 'IM Fell English', serif;
-      font-size: 12px; letter-spacing: 0.08em;
-      text-decoration: none; color: var(--ink);
-      border: 1px solid var(--ink);
-      padding: 8px 22px; opacity: 0.65;
-      transition: all 0.2s;
+      font-size: 12px; opacity: 0.5; letter-spacing: 0.08em;
     }
-    .stream-a:hover { background: var(--ink); color: var(--cream); opacity: 1; }
+    .ap-ep {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; font-weight: 700; margin-top: 2px;
+    }
+    .ap-genre {
+      font-family: 'IM Fell English', serif;
+      font-size: 10px;
+      border: 1px solid var(--border);
+      padding: 3px 8px; letter-spacing: 0.05em;
+      opacity: 0.55; white-space: nowrap; flex-shrink: 0; align-self: flex-start;
+    }
+
+    .ap-controls {
+      display: flex; align-items: center; gap: 10px; flex: 1;
+    }
+
+    .ap-play-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%; border: 1.5px solid var(--ink);
+      background: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.2s;
+    }
+    .ap-play-btn:hover { background: var(--ink); }
+    .ap-play-btn:hover path, .ap-play-btn:hover rect { fill: var(--cream); }
+
+    .ap-waveform {
+      display: flex; align-items: flex-end;
+      gap: 1.5px; height: 42px;
+      cursor: pointer; flex: 1; overflow: hidden;
+    }
+    .wf-bar {
+      flex: 1; min-width: 1px;
+      background: var(--border); border-radius: 1px;
+    }
+    .wf-bar.played { background: var(--ink); }
+
+    .ap-time {
+      font-family: 'IM Fell English', serif;
+      font-size: 11px; opacity: 0.38;
+      letter-spacing: 0.04em; flex-shrink: 0; white-space: nowrap;
+    }
+
+    .ap-tracklist { border-top: 1px solid var(--border); }
+
+    .ap-track {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 14px; cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid rgba(200,192,160,0.22);
+      user-select: none;
+    }
+    .ap-track:last-child { border-bottom: none; }
+    .ap-track:hover { background: rgba(200,192,160,0.18); }
+    .ap-track.active { background: rgba(200,192,160,0.28); }
+
+    .ap-track-thumb {
+      width: 32px; height: 32px; flex-shrink: 0;
+      overflow: hidden;
+      background: linear-gradient(145deg, #9c9590, #787270);
+    }
+    .ap-track-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .ap-track-num {
+      font-family: 'IM Fell English', serif;
+      font-size: 11px; opacity: 0.32;
+      min-width: 12px; text-align: right; flex-shrink: 0;
+    }
+    .ap-track-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      flex-shrink: 0; background: transparent;
+    }
+    .ap-track.active .ap-track-dot { background: var(--red); }
+
+    .ap-track-name {
+      font-family: 'IM Fell English', serif;
+      font-size: 14px; letter-spacing: 0.04em; flex: 1;
+    }
+    .ap-track-dur {
+      font-family: 'IM Fell English', serif;
+      font-size: 11px; opacity: 0.32; flex-shrink: 0;
+    }
+
+    .ap-bottom {
+      border-top: 1px solid var(--border);
+      padding: 10px 14px; display: flex; gap: 10px;
+    }
+    .ap-sc-btn {
+      font-family: 'IM Fell English', serif;
+      font-size: 11px; letter-spacing: 0.08em;
+      text-decoration: none; color: var(--ink);
+      border: 1px solid var(--border);
+      padding: 6px 16px; opacity: 0.6; transition: all 0.2s;
+    }
+    .ap-sc-btn:hover { background: var(--ink); color: var(--cream); opacity: 1; }
 
     /* ══ ФОТО / КАРТА ══ */
     #foto { background: var(--cream-dark); justify-content: flex-start; padding-top: 70px; min-height: auto; }
@@ -412,15 +489,6 @@
       text-align: center; padding: 10px;
     }
 
-    /* album art clickable */
-    .album-art { cursor: pointer; position: relative; }
-    .album-art::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(26,22,17,0);
-      transition: background 0.2s;
-    }
-    .album-art:hover::after { background: rgba(26,22,17,0.15); }
 
     /* fullscreen btn */
     .video-wrap { position: relative; }
@@ -573,19 +641,12 @@
       /* Кліп */
       #klip { justify-content: center; }
 
-      /* Слухати — стаємо вертикально */
-      .listen-wrap {
-        flex-direction: column;
-        gap: 28px;
-        padding: 80px 20px 40px;
-        align-items: flex-start;
-      }
-      .album-art {
-        width: 100% !important;
-        height: 220px !important;
-        flex-shrink: unset;
-      }
-      .track-title { font-size: clamp(28px, 8vw, 42px); }
+      /* Слухати */
+      .ap-wrap { padding: 60px 16px 40px; }
+      .ap-cover { width: 100px; height: 100px; }
+      .ap-ep { font-size: 13px; }
+      .ap-genre { display: none; }
+      .ap-waveform { height: 32px; }
 
       /* Фото / карта */
       #foto { padding-top: 70px; }
@@ -664,36 +725,38 @@
 
 <!-- ════ СЛУХАТИ ════ -->
 <section id="muzyka">
-  <div class="listen-wrap">
-    <!-- Клік на обкладинку → SoundCloud. Заміни href на своє посилання -->
-    <a href="#" target="_blank" class="album-art rv" title="Слухати на SoundCloud" style="text-decoration:none;">
-      <!-- <img src="album.jpg" alt="Обкладинка"> -->
-      <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
-        <circle cx="35" cy="35" r="32" stroke="#f5f0dc" stroke-width="1.5" opacity="0.4"/>
-        <circle cx="35" cy="35" r="9" fill="#f5f0dc" opacity="0.25"/>
-      </svg>
-    </a>
-    <div class="listen-info">
-      <div class="sec-label rv">слухати</div>
-      <div class="track-title rv rv2">Подивись</div>
-      <div class="track-sub rv rv2">MooЗики · 2026</div>
-      <div class="player-row rv rv3">
-        <button class="btn-play" onclick="togglePlay(this)">
-          <svg id="playIcon" width="14" height="16" viewBox="0 0 14 16" fill="none">
-            <path d="M1 1L13 8L1 15V1Z" fill="#1a1611"/>
-          </svg>
-        </button>
-        <div class="prog-bar" onclick="seekAudio(event,this)">
-          <div class="prog-fill" id="progFill"></div>
+  <div class="ap-wrap rv">
+    <div class="sec-label rv" style="margin-bottom:14px;">слухати</div>
+    <div class="album-player rv rv2">
+      <div class="ap-top">
+        <div class="ap-cover">
+          <img src="site_photos/albom.png" alt="MooЗики EP">
         </div>
-        <span class="time-txt" id="timeTxt">0:00 / 3:34</span>
+        <div class="ap-main">
+          <div class="ap-header">
+            <div>
+              <div class="ap-band">MooЗики</div>
+              <div class="ap-ep">MooЗики EP · 2026</div>
+            </div>
+            <div class="ap-genre"># Alternative Rock</div>
+          </div>
+          <div class="ap-controls">
+            <button class="ap-play-btn" id="apPlayBtn" onclick="apToggle()">
+              <svg id="apPlayIcon" width="13" height="15" viewBox="0 0 13 15" fill="none">
+                <path d="M1 1L12 7.5L1 14V1Z" fill="#1a1611"/>
+              </svg>
+            </button>
+            <div class="ap-waveform" id="apWaveform" onclick="apSeek(event)"></div>
+            <span class="ap-time" id="apTimeTxt">0:00 / 0:00</span>
+          </div>
+        </div>
       </div>
-      <div class="stream-row rv rv3">
-        <a class="stream-a" href="#" target="_blank">SoundCloud</a>
+      <div class="ap-tracklist" id="apTracklist"></div>
+      <div class="ap-bottom">
+        <a class="ap-sc-btn" href="https://on.soundcloud.com/dPB3YZ2l9tSgiHvapR" target="_blank">SoundCloud</a>
       </div>
     </div>
   </div>
-  
 </section>
 
 <!-- ════ СПІЛЬНІ ФОТО ════ -->
@@ -806,7 +869,7 @@
 
 <script>
   /* YouTube */
-  const VID = 'dQw4w9WgXcQ'; // ← ЗАМІНИ на свій YouTube ID
+  const VID = 'tkVEb5-R2w0';
   function loadVideo() {
     const ph = document.getElementById('vidPh');
     const f = document.createElement('iframe');
@@ -816,35 +879,109 @@
     ph.parentNode.replaceChild(f, ph);
   }
 
-  /* Player */
-  let playing = false, prog = 0, tick = null;
-  const TOTAL = 214;
-  const audio = new Audio('podivis.mp3');
-  const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  /* ══ ALBUM PLAYER ══ */
+  const TRACKS = [
+    { num: 1, name: 'Інтро',          file: 'music/intro.mp3' },
+    { num: 2, name: 'Балконний гном', file: 'music/balkonygnom.mp3' },
+    { num: 3, name: 'Подивись',       file: 'music/podivis.mp3' },
+    { num: 4, name: 'Пацантре',       file: 'music/pacantre.mp3' },
+    { num: 5, name: 'Пий Чай',        file: 'music/puychay.mp3' },
+  ];
 
-  function togglePlay(btn) {
-    playing = !playing;
-    const ic = document.getElementById('playIcon');
-    if (playing) {
-      audio.play();
-      ic.innerHTML = '<rect x="1" y="1" width="4" height="14" fill="#1a1611"/><rect x="9" y="1" width="4" height="14" fill="#1a1611"/>';
-    } else {
-      audio.pause();
-      ic.innerHTML = '<path d="M1 1L13 8L1 15V1Z" fill="#1a1611"/>';
-    }
-    audio.ontimeupdate = () => {
-      prog = (audio.currentTime / audio.duration) * 100;
-      document.getElementById('progFill').style.width = prog + '%';
-      document.getElementById('timeTxt').textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
-    };
+  let apIdx = 2, apPlaying = false;
+  const apAudio = new Audio();
+  const fmtT = s => (isNaN(s) || s == null) ? '0:00'
+    : `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+
+  function genWave(seed, freqs) {
+    let s = seed;
+    const rand = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 0xffffffff; };
+    return Array.from({ length: 120 }, (_, i) => {
+      const x = i / 120;
+      let h = 38;
+      freqs.forEach(([a, f, p]) => h += a * Math.sin(x * Math.PI * f + p));
+      h += 18 * (rand() * 2 - 1);
+      return Math.max(5, Math.min(98, h));
+    });
   }
 
-  function seekAudio(e, bar) {
-    const r = bar.getBoundingClientRect();
-    prog = Math.max(0, Math.min(((e.clientX - r.left) / r.width) * 100, 100));
-    audio.currentTime = (prog / 100) * audio.duration;
-    document.getElementById('progFill').style.width = prog + '%';
+  const WAVEFORMS = [
+    genWave(17,  [[20,6,1.1],[13,17,2.2],[7,33,0.5],[5,54,1.8]]),
+    genWave(83,  [[18,9,0.8],[16,23,1.5],[10,41,2.9],[6,63,0.3]]),
+    genWave(42,  [[22,8,1.2],[14,19,2.3],[8,37,0.8],[6,61,1.5]]),
+    genWave(156, [[25,5,0.3],[12,18,1.7],[9,46,2.1],[7,69,0.9]]),
+    genWave(71,  [[15,11,1.9],[18,26,0.6],[11,43,1.3],[8,60,2.7]]),
+  ];
+
+  function renderWaveform(idx) {
+    document.getElementById('apWaveform').innerHTML =
+      WAVEFORMS[idx].map(h =>
+        `<div class="wf-bar" style="height:${h.toFixed(1)}%"></div>`
+      ).join('');
   }
+
+  renderWaveform(apIdx);
+
+  (function buildTracklist() {
+    document.getElementById('apTracklist').innerHTML = TRACKS.map((t, i) => `
+      <div class="ap-track${i === apIdx ? ' active' : ''}" onclick="apLoad(${i})">
+        <div class="ap-track-thumb"><img src="site_photos/albom.png" alt=""></div>
+        <span class="ap-track-num">${t.num}</span>
+        <div class="ap-track-dot"></div>
+        <span class="ap-track-name">${t.name}</span>
+        <span class="ap-track-dur" id="apDur${i}"></span>
+      </div>`).join('');
+  })();
+
+  function apUpdateWave() {
+    const pct = apAudio.currentTime / (apAudio.duration || 1);
+    document.querySelectorAll('.wf-bar').forEach((b, i, all) =>
+      b.classList.toggle('played', i / all.length < pct));
+    document.getElementById('apTimeTxt').textContent =
+      `${fmtT(apAudio.currentTime)} / ${fmtT(apAudio.duration)}`;
+  }
+
+  function apSeek(e) {
+    const r = document.getElementById('apWaveform').getBoundingClientRect();
+    const pct = Math.max(0, Math.min((e.clientX - r.left) / r.width, 1));
+    if (!isNaN(apAudio.duration)) apAudio.currentTime = pct * apAudio.duration;
+  }
+
+  function apLoad(idx) {
+    apIdx = idx;
+    apAudio.src = TRACKS[idx].file;
+    apAudio.load();
+    document.querySelectorAll('.ap-track').forEach((el, i) =>
+      el.classList.toggle('active', i === idx));
+    renderWaveform(idx);
+    document.getElementById('apTimeTxt').textContent = '0:00 / 0:00';
+    if (apPlaying) apAudio.play().catch(() => {});
+  }
+
+  function apSetIcon(playing) {
+    document.getElementById('apPlayIcon').innerHTML = playing
+      ? '<rect x="1" y="1" width="4" height="13" fill="#1a1611"/><rect x="8" y="1" width="4" height="13" fill="#1a1611"/>'
+      : '<path d="M1 1L12 7.5L1 14V1Z" fill="#1a1611"/>';
+  }
+
+  function apToggle() {
+    if (!apAudio.src || apAudio.src === window.location.href)
+      apAudio.src = TRACKS[apIdx].file;
+    if (apPlaying) { apAudio.pause(); apPlaying = false; }
+    else { apAudio.play().catch(() => {}); apPlaying = true; }
+    apSetIcon(apPlaying);
+  }
+
+  apAudio.ontimeupdate = apUpdateWave;
+  apAudio.onended = () => {
+    apPlaying = false; apSetIcon(false);
+    if (apIdx < TRACKS.length - 1) apLoad(apIdx + 1);
+  };
+  apAudio.onloadedmetadata = () => {
+    const dur = document.getElementById(`apDur${apIdx}`);
+    if (dur) dur.textContent = fmtT(apAudio.duration);
+    document.getElementById('apTimeTxt').textContent = `0:00 / ${fmtT(apAudio.duration)}`;
+  };
 
   /* ── MAP GALLERY ── */
   const LOCATIONS = {
@@ -976,6 +1113,20 @@
   /* Scroll reveal */
   const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); } }), { threshold: 0.1 });
   document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+  /* Active nav */
+  const navLinks = document.querySelectorAll('.topnav nav a');
+  const sections = ['dim','klip','muzyka','foto'].map(id => document.getElementById(id));
+  const navObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('nav-active'));
+        const link = document.querySelector(`.topnav nav a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('nav-active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => s && navObs.observe(s));
 </script>
 
 <!-- SECRET MODAL -->
